@@ -22,7 +22,7 @@ export async function run() {
       range.load("address");
 
       // Update the fill color.
-      range.format.fill.color = "yellow";
+      range.format.fill.color = "black";
 
       await context.sync();
       console.log(`The range address was ${range.address}.`);
