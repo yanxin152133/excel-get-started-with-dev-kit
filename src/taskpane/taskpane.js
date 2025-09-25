@@ -124,7 +124,13 @@ export async function run5() {
       await context.sync();
       console.log(`The range address was ${range.address}.`);
       console.log(`The range values were ${JSON.stringify(range.values)}.`);
-      alert(`单元格 ${range.address} 的值是 ${JSON.stringify(range.values)}`);
+      // Display the message in the task pane instead of using alert
+      const messageElement = document.getElementById("message");
+      if (messageElement) {
+        messageElement.textContent = `单元格 ${range.address} 的值是 ${JSON.stringify(range.values)}`;
+      } else {
+        console.log(`单元格 ${range.address} 的值是 ${JSON.stringify(range.values)}`);
+      }
     });
   } catch (error) {
     console.error(error);
