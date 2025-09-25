@@ -14,6 +14,7 @@ Office.onReady((info) => {
     document.getElementById("run2").onclick = run2;
     document.getElementById("run3").onclick = run3;
     document.getElementById("run4").onclick = run4;
+    document.getElementById("run5").onclick = run5;
   }
 });
 
@@ -106,6 +107,24 @@ export async function run4() {
 
       await context.sync();
       console.log(`The range address was ${range.address}.`);
+    });
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+export async function run5() {
+  try {
+    await Excel.run(async (context) => {
+      const range = context.workbook.getSelectedRange();
+
+      // Read the range address and values.
+      range.load("address, values");
+
+      await context.sync();
+      console.log(`The range address was ${range.address}.`);
+      console.log(`The range values were ${JSON.stringify(range.values)}.`);
+      alert(`单元格 ${range.address} 的值是 ${JSON.stringify(range.values)}`);
     });
   } catch (error) {
     console.error(error);
