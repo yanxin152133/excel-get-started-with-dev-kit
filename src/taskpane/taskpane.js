@@ -131,6 +131,10 @@ export async function run5() {
       } else {
         console.log(`单元格 ${range.address} 的值是 ${JSON.stringify(range.values)}`);
       }
+      const valueElement = document.getElementById("value");
+      if (valueElement) {
+        valueElement.textContent = `值: ${JSON.stringify(range.values)}`;
+      }
     });
   } catch (error) {
     console.error(error);
