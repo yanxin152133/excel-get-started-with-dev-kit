@@ -15,6 +15,7 @@ Office.onReady((info) => {
     document.getElementById("run3").onclick = run3;
     document.getElementById("run4").onclick = run4;
     document.getElementById("run5").onclick = run5;
+    document.getElementById("run6").onclick = run6; // 获取单元格的颜色
   }
 });
 
@@ -134,6 +135,34 @@ export async function run5() {
       const valueElement = document.getElementById("value");
       if (valueElement) {
         valueElement.textContent = `值: ${JSON.stringify(range.values)}`;
+      }
+    });
+  } catch (error) {
+    console.error(error);
+  }
+}
+// 获取单元格的颜色
+export async function run6() {
+  try {
+    await Excel.run(async (context) => {
+      const range = context.workbook.getSelectedRange();
+
+      // Read the range address and fill color.
+      range.load("address, format/fill/color");
+
+      await context.sync();
+      console.log(`The range address was ${range.address}.`);
+      console.log(`The range fill color was ${range.format.fill.color}.`);
+      // Display the message in the task pane instead of using alert
+      const messageElement = document.getElementById("message");
+      if (messageElement) {
+        messageElement.textContent = `单元格 ${range.address} 的颜色是 ${range.format.fill.color}`;
+      } else {
+        console.log(`单元格 ${range.address} 的颜色是 ${range.format.fill.color}`);
+      }
+      const valueElement = document.getElementById("value1");
+      if (valueElement) {
+        valueElement.textContent = `颜色: ${range.format.fill.color}`;
       }
     });
   } catch (error) {
