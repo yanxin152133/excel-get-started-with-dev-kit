@@ -147,22 +147,46 @@ export async function run6() {
     await Excel.run(async (context) => {
       const range = context.workbook.getSelectedRange();
 
-      // Read the range address and fill color.
-      range.load("address, format/fill/color");
+      // Load the range address and fill colors.
+      range.load(["address", "format/fill/color", "rowCount", "columnCount"]);
 
       await context.sync();
-      console.log(`The range address was ${range.address}.`);
-      console.log(`The range fill color was ${range.format.fill.color}.`);
+
+      const address = range.address;
+      const rowCount = range.rowCount;
+      const columnCount = range.columnCount;
+
+      // Load the fill color for each cell in the range
+      const cellColors = [];
+      for (let i = 0; i < rowCount; i++) {
+      const rowColors = [];
+      for (let j = 0; j < columnCount; j++) {
+        const cell = range.getCell(i, j);
+        cell.load("format/fill/color");
+        rowColors.push(cell);
+      }
+      cellColors.push(rowColors);
+      }
+      await context.sync();
+
+      // Collect colors
+      const colors = cellColors.map(row =>
+      row.map(cell => cell.format.fill.color)
+      );
+
+      console.log(`The range address was ${address}.`);
+      console.log(`The range fill colors were ${JSON.stringify(colors)}.`);
+
       // Display the message in the task pane instead of using alert
       const messageElement = document.getElementById("message");
       if (messageElement) {
-        messageElement.textContent = `单元格 ${range.address} 的颜色是 ${range.format.fill.color}`;
+      messageElement.textContent = `单元格 ${address} 的颜色是 ${JSON.stringify(colors)}`;
       } else {
-        console.log(`单元格 ${range.address} 的颜色是 ${range.format.fill.color}`);
+      console.log(`单元格 ${address} 的颜色是 ${JSON.stringify(colors)}`);
       }
       const valueElement = document.getElementById("value1");
       if (valueElement) {
-        valueElement.textContent = `颜色: ${range.format.fill.color}`;
+      valueElement.textContent = `颜色: ${JSON.stringify(colors)}`;
       }
     });
   } catch (error) {
