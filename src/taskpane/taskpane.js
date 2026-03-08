@@ -16,6 +16,7 @@ Office.onReady((info) => {
     document.getElementById("run4").onclick = run4;
     document.getElementById("run5").onclick = run5;
     document.getElementById("run6").onclick = run6; // 获取单元格的颜色
+    document.getElementById("run7").onclick = run7; // 获取单元格的颜色
   }
 });
 
@@ -188,6 +189,25 @@ export async function run6() {
       if (valueElement) {
       valueElement.textContent = `颜色: ${JSON.stringify(colors)}`;
       }
+    });
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+export async function run7() {
+  try {
+    await Excel.run(async (context) => {
+      const range = context.workbook.getSelectedRange();
+
+      // Read the range address.
+      range.load("address");
+
+      // Update the fill color.
+      range.format.fill.color = "black";
+
+      await context.sync();
+      console.log(`The range address was ${range.address}.`);
     });
   } catch (error) {
     console.error(error);
